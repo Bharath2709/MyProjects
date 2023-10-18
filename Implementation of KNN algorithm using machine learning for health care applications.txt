@@ -1,0 +1,46 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.ticker import NullFormatter
+import pandas as pd
+import matplotlib.ticker as ticker
+from sklearn import preprocessing
+
+df = pd.read_csv('teleCust1000t.csv')
+df.head()
+
+#df1=pd.read_csv('tele.csv')
+#df1.head()
+
+df['custcat'].value_counts()
+plt.scatter(df.custcat,df.income,color='red')
+plt.xlabel('cat')
+plt.ylabel('income')
+plt.show()
+df.columns
+
+X = df[['region', 'tenure','age', 'marital', 'address', 'income', 'ed', 'employ','retire', 'gender', 'reside']] .values  #.astype(float)
+
+y = df['custcat'].values
+#X1=df1[['region', 'tenure','age', 'marital', 'address', 'income', 'ed', 'employ','retire', 'gender', 'reside']] .values
+
+#s=df1['custcat'].values
+
+X = preprocessing.StandardScaler().fit(X).transform(X.astype(float))
+
+#X1 = preprocessing.StandardScaler().fit(X1).transform(X1.astype(float))
+
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split( X, y, test_size=0.1, random_state=4)
+print ('Train set:', X_train.shape,  y_train.shape)
+print ('Test set:', X_test.shape,  y_test.shape)
+
+from sklearn.neighbors import KNeighborsClassifier
+
+k = 4
+#Train Model and Predict  
+neigh = KNeighborsClassifier(n_neighbors = k).fit(X_train,y_train)
+
+yhat = neigh.predict(X_test)
+print(yhat)
+yhat[0:5] 
